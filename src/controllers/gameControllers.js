@@ -16,12 +16,12 @@ async function getGames(req, res) {
 }
 
 async function createGames(req, res) {
-    const newGame = res.locals.newGame;
+    const { name, image, stockTotal, categoryId, pricePerDay } = res.locals.newGame;
 
     try {
         await connection.query(
             'INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5)', 
-            [newGame.name, newGame.image, newGame.stockTotal, newGame.categoryId, newGame.pricePerDay]
+            [name, image, stockTotal, categoryId, pricePerDay]
         );
 
         res.sendStatus(201);
