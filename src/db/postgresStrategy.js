@@ -1,10 +1,23 @@
 import "dotenv/config";
-import { Pool } from "pg";
+import pg from "pg";
 
-const connectionString = process.env.DATABASE_URL;
+const { Pool } = pg;
+
+//const connectionString = process.env.DATABASE_URL;
+const connectionString = {
+    host: process.env.PG_HOST,
+    port: process.env.PG_PORT,
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE
+}
 
 const connection = new Pool({
-    connectionString
+    host: process.env.PG_HOST,
+    port: process.env.PG_PORT,
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE
 });
 
 export default connection;
