@@ -44,7 +44,7 @@ async function getCustomer(req, res) {
 
         customer[0] = {...customer[0], birthday: dayjs(customer[0].birthday).format('YYYY-MM-DD')} 
 
-        res.status(200).send(customer);
+        res.status(200).send(customer[0]);
         return;
 
     } catch (error) {
