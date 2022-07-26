@@ -5,19 +5,19 @@ async function getCustomers(req, res) {
 
     try {
         if(cpf) {
-            const { rows: response } = await connection.query(
+            const { rows: customerWithQuery } = await connection.query(
                 `SELECT * FROM customers WHERE cpf LIKE $1 || '%'`,
                 [cpf]
             );
 
-            res.status(200).send(response);
+            res.status(200).send(customerWithQuery);
             return;
         }
 
-        const { rows: response } = await connection.query(
+        const { rows: allCustomers } = await connection.query(
             'SELECT * FROM customers'
         );
-        res.status(200).send(response);
+        res.status(200).send(allCustomers);
         return;
 
     } catch (error) {
@@ -31,17 +31,17 @@ async function getCustomer(req, res) {
     const { id } = req.params;
 
     try {
-        const { rows: response } = await connection.query(
+        const { rows: customer } = await connection.query(
             'SELECT * FROM customers WHERE id = $1',
             [id]
         );
 
-        if(!response[0]) {
+        if(!customer[0]) {
             res.sendStatus(404);
             return;
         }
 
-        res.status(200).send(response);
+        res.status(200).send(customer);
         return;
 
     } catch (error) {
