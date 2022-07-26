@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import connection from "../db/postgresStrategy.js";
 
 async function getCustomers(req, res) {
@@ -40,6 +41,8 @@ async function getCustomer(req, res) {
             res.sendStatus(404);
             return;
         }
+
+        customer[0] = {...customer[0], birthday: dayjs(customer[0].birthday).format('YYYY-MM-DD')} 
 
         res.status(200).send(customer);
         return;
