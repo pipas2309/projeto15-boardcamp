@@ -2,10 +2,10 @@ import connection from "../db/postgresStrategy.js";
 
 async function getCategories(req, res) {
     try {
-        const { rows: response } = await connection.query(
+        const { rows: categories } = await connection.query(
             'SELECT * FROM categories'
         );
-        res.status(200).send(response);
+        res.status(200).send(categories);
         return;
 
     } catch (error) {
