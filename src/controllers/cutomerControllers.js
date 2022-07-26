@@ -29,12 +29,18 @@ async function getCustomers(req, res) {
 
 async function getCustomer(req, res) {
     const { id } = req.params;
-    console.log(id)
 
     try {
         const { rows: response } = await connection.query(
-            'SELECT * FROM customers'
+            'SELECT * FROM customers WHERE id = $1',
+            [id]
         );
+
+        if(!response[0]) {
+            res.sendStatus(404);
+            return;
+        }
+
         res.status(200).send(response);
         return;
 
@@ -46,12 +52,12 @@ async function getCustomer(req, res) {
 }
 
 async function createCustomer(req, res) {
-    const { name, image, stockTotal, categoryId, pricePerDay } = res.locals.newGame;
+    const { name, phone, cpf, birthday } = res.locals.newCustomer;
 
     try {
         await connection.query(
-            'INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5)', 
-            [name, image, stockTotal, categoryId, pricePerDay]
+            'INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)', 
+            [name, phone, cpf, birthday]
         );
 
         res.sendStatus(201);

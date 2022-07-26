@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/pipas2309/projeto15-boardcamp#readme",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.4",
     "dotenv": "^16.0.1",

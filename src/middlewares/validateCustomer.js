@@ -1,10 +1,10 @@
 import connection from "../db/postgresStrategy.js";
-import gamesSchema from "../models/joiGames.js";
+import customerSchema from "../models/joiCustomers.js";
 
-async function validateGame (req, res, next) {
-    const newGame = req.body;
+async function validateCustomer (req, res, next) {
+    const newCustomer = req.body;
 
-    const isValidyEntry = gamesSchema.validate(newGame, { abortEarly: false });
+    const isValidyEntry = customerSchema.validate(newCustomer, { abortEarly: false });
 
     if(isValidyEntry.error) {
         return res.sendStatus(400);
@@ -12,7 +12,7 @@ async function validateGame (req, res, next) {
 
     try {
         const allCategories = await connection.query(
-            'SELECT * FROM games WHERE name = $1', [newGame.name]
+            'SELECT * FROM games WHERE cpf = $1', [newCustomer.cpf]
         );
 
         if (allCategories.rowCount === 1) {
@@ -20,8 +20,8 @@ async function validateGame (req, res, next) {
             return;
         }
 
-        res.locals.newGame = newGame;
-        
+        res.locals.newCustomer = newCustomer;
+
         next();
 
     } catch (error) {
@@ -31,4 +31,4 @@ async function validateGame (req, res, next) {
     }
 }
 
-export default validateGame;
+export default validateCustomer;

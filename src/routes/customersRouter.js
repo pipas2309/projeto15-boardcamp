@@ -1,13 +1,13 @@
 import express from 'express';
 import { createCustomer, getCustomer, getCustomers, updateCustomer } from '../controllers/cutomerControllers.js';
-import validateGame from '../middlewares/validateGame.js';
+import validateCustomer from '../middlewares/validateCustomer.js';
 
 
 const router = express.Router();
 
 router.get("/", getCustomers);
 router.get("/:id", getCustomer);
-router.post("/", validateGame, createCustomer);
-router.put("/:id", validateGame, updateCustomer);
+router.post("/", validateCustomer, createCustomer);
+router.put("/:id", validateCustomer, updateCustomer);
 
 export default router;
