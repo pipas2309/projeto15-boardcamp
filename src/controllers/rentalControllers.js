@@ -124,13 +124,27 @@ async function finishRentals(req, res) {
 }
 
 async function deleteRentals(req, res) {
-    const { name, phone, cpf, birthday } = res.locals.customer;
     const { id } = req.params;
 
     try {
+        const checkRentalId = await connection.query(
+            'SELECT * FROM rentals WHERE id = $1', 
+            [id]
+        );
+
+        if(checkRentalId.rowCount === 0) {
+            res.sendStatus(404);
+            return;
+        }
+
+        if(checkRentalId.rows[0].returnDate === null) {
+            res.sendStatus(400);
+            return;
+        }
+
         await connection.query(
-            'UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE id = $5', 
-            [name, phone, cpf, birthday, id]
+            'DELETE FROM rentals WHERE id = $1',
+            [id]
         );
 
         res.sendStatus(200);
