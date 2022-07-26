@@ -1,21 +1,25 @@
 import connection from "../db/postgresStrategy.js";
 
-async function getCustomers(req, res) {
-    const { cpf } = req.query;
+async function getRentals(req, res) {
+    const { customerId, gameId } = req.query;
+
+    let postgresQuery = '';
+    let params = [];
 
     try {
-        if(cpf) {
-            const { rows: response } = await connection.query(
-                `SELECT * FROM customers WHERE cpf LIKE $1 || '%'`,
-                [cpf]
-            );
+        //Ternario para saber se usa WHERE ou AND
+        if(customerId){
+            postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "customerId = $${params.length + 1} `;
+            params.push(customerId);
+        }
 
-            res.status(200).send(response);
-            return;
+        if(gameId){
+            postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "gameId = $${params.length + 1} `;
+            params.push(gameId);
         }
 
         const { rows: response } = await connection.query(
-            'SELECT * FROM customers'
+            `SELECT * FROM rentals ${postgresQuery}`, params
         );
         res.status(200).send(response);
         return;
@@ -27,7 +31,7 @@ async function getCustomers(req, res) {
     }
 }
 
-async function getCustomer(req, res) {
+async function createRentals(req, res) {
     const { id } = req.params;
 
     try {
@@ -51,7 +55,7 @@ async function getCustomer(req, res) {
     }
 }
 
-async function createCustomer(req, res) {
+async function finishRentals(req, res) {
     const { name, phone, cpf, birthday } = res.locals.newCustomer;
 
     try {
@@ -70,7 +74,7 @@ async function createCustomer(req, res) {
     }
 }
 
-async function updateCustomer(req, res) {
+async function deleteRentals(req, res) {
     const { name, phone, cpf, birthday } = res.locals.customer;
     const { id } = req.params;
 
@@ -91,8 +95,8 @@ async function updateCustomer(req, res) {
 }
 
 export {
-    getCustomer,
-    getCustomers,
-    createCustomer,
-    updateCustomer
+    createRentals,
+    getRentals,
+    finishRentals,
+    deleteRentals
 }
