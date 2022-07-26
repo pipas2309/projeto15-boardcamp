@@ -7,12 +7,13 @@ async function getRentals(req, res) {
     let params = [];
 
     try {
-        //Ternario para saber se usa WHERE ou AND
+        
         if(customerId){
-            postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "customerId = $${params.length + 1} `;
+            postgresQuery += `WHERE "customerId" = $${params.length + 1} `;
             params.push(customerId);
         }
 
+        //Ternario para saber se usa WHERE ou AND
         if(gameId){
             postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "gameId = $${params.length + 1} `;
             params.push(gameId);
