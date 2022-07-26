@@ -34,7 +34,7 @@ async function getRentals(req, res) {
 }
 
 async function createRentals(req, res) {
-    const { gameId, customerId, daysRented  } = req.locals.newRental;
+    const { gameId, customerId, daysRented  } = res.locals.newRental;
 
     try {
         //Procurando todos os jogos alugados desse ID
@@ -45,7 +45,7 @@ async function createRentals(req, res) {
 
         //Procurando todos os jogos desse ID
         const checkGame = await connection.query(
-            'SELECT * FROM games WHERE id = $1', [newRental.gameId]
+            'SELECT * FROM games WHERE id = $1', [gameId]
         );
 
         //Comparando para ver se existe disponível
@@ -74,12 +74,12 @@ async function createRentals(req, res) {
 }
 
 async function finishRentals(req, res) {
-    const { name, phone, cpf, birthday } = res.locals.newCustomer;
+    const { id } = req.params;
 
     try {
-        await connection.query(
-            'INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)', 
-            [name, phone, cpf, birthday]
+        const rental = await connection.query(
+            'SELECT * FROM rentals WHERE id = $1', 
+            [id]
         );
 
         res.sendStatus(201);
