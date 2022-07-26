@@ -25,7 +25,7 @@ async function validateCustomer (req, res, next) {
             );
     
             if (allCategories.rowCount === 1) {
-                res.status(409).send();
+                res.sendStatus(409);
                 return;
             }
     
@@ -48,7 +48,7 @@ async function validateCustomer (req, res, next) {
         );
       
         if (allCategories.rowCount === 1) {
-            res.status(409).send();
+            res.sendStatus(409);
             return;
         }
 

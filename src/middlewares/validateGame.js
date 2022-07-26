@@ -16,7 +16,7 @@ async function validateGame (req, res, next) {
         );
 
         if (allCategories.rowCount === 1) {
-            res.status(409).send();
+            res.sendStatus(409)
             return;
         }
 
