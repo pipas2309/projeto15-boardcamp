@@ -3,8 +3,9 @@ import connection from "../db/postgresStrategy.js";
 async function getGames(req, res) {
     try {
         const { rows: allGames } = await connection.query(
-            'SELECT * FROM games'
+            'SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id'
         );
+
         res.status(200).send(allGames);
         return;
 
