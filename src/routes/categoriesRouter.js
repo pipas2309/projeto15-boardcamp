@@ -4,7 +4,7 @@ import validateCategory from '../middlewares/validateCategory.js';
 
 const router = express.Router();
 
-router.get("", getCategories);
-router.post("", validateCategory, createCategories);
+router.get("/", getCategories);
+router.post("/", validateCategory, createCategories);
 
 export default router;
