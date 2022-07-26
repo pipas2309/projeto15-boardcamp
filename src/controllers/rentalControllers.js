@@ -16,14 +16,14 @@ async function getRentals(req, res) {
 
         //Ternario para saber se usa WHERE ou AND
         if(gameId){
-            postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "gameId = $${params.length + 1} `;
+            postgresQuery += `${postgresQuery === '' ? 'WHERE' : 'AND'} "gameId" = $${params.length + 1} `;
             params.push(gameId);
         }
 
-        const { rows: response } = await connection.query(
+        const { rows: rentals } = await connection.query(
             `SELECT * FROM rentals ${postgresQuery}`, params
         );
-        res.status(200).send(response);
+        res.status(200).send(rentals);
         return;
 
     } catch (error) {
