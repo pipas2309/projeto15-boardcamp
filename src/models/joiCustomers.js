@@ -1,10 +1,13 @@
 import joi from 'joi';
+import date from '@joi/date';
 
-const customerSchema = joi.object({
-    name: joi.string().min(1).required(),
-    phone: joi.string().pattern(/[0-9]{10,11}/).required(),
-    cpf: joi.string().pattern(/[0-9]{11}/).required(),
-    birthday: joi.date().required()
+const Joi = joi.extend(date);
+
+const customerSchema = Joi.object({
+    name: Joi.string().min(1).required(),
+    phone: Joi.string().pattern(/[0-9]{10,11}/).required(),
+    cpf: Joi.string().pattern(/[0-9]{11}/).required(),
+    birthday: Joi.date().format("YYYY-MM-DD").utc().required()
 });
 
 export default customerSchema;

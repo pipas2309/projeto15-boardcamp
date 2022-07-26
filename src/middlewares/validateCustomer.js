@@ -12,7 +12,7 @@ async function validateCustomer (req, res, next) {
 
     try {
         const allCategories = await connection.query(
-            'SELECT * FROM games WHERE cpf = $1', [newCustomer.cpf]
+            'SELECT * FROM customers WHERE cpf = $1', [newCustomer.cpf]
         );
 
         if (allCategories.rowCount === 1) {
@@ -21,7 +21,7 @@ async function validateCustomer (req, res, next) {
         }
 
         res.locals.newCustomer = newCustomer;
-
+        
         next();
 
     } catch (error) {
