@@ -2,10 +2,10 @@ import connection from "../db/postgresStrategy.js";
 
 async function getGames(req, res) {
     try {
-        const { rows: response } = await connection.query(
+        const { rows: allGames } = await connection.query(
             'SELECT * FROM games'
         );
-        res.status(200).send(response);
+        res.status(200).send(allGames);
         return;
 
     } catch (error) {
