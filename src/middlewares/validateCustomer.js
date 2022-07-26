@@ -12,11 +12,16 @@ async function validateCustomer (req, res, next) {
         return res.sendStatus(400);
     }
 
+    //Verifica se existe parametros para o ID, 
+    //assim sabe qual rota está sendo solicitada!
+    //Nesse caso os dados são tratados para a rota ** PUT /customers/:id ** 
     if(id) {
         try {
+            const customer = newCustomer;
+            
             const allCategories = await connection.query(
                 'SELECT * FROM customers WHERE cpf = $1 AND id <> $2', 
-                [newCustomer.cpf, id]
+                [customer.cpf, id]
             );
     
             if (allCategories.rowCount === 1) {
@@ -24,7 +29,7 @@ async function validateCustomer (req, res, next) {
                 return;
             }
     
-            res.locals.customer = newCustomer;
+            res.locals.customer = customer;
             
             next();
             return;   
@@ -36,7 +41,7 @@ async function validateCustomer (req, res, next) {
         }
     }
 
-
+    //Dados tratados para a rota ** POST /customers **
     try {
         const allCategories = await connection.query(
             'SELECT * FROM customers WHERE cpf = $1', [newCustomer.cpf]

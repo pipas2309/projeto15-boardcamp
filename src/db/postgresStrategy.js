@@ -4,6 +4,7 @@ import pg from "pg";
 const { Pool } = pg;
 
 //const connectionString = process.env.DATABASE_URL; //Alternative URL
+
 const connectionString = {
     host: process.env.PG_HOST,
     port: process.env.PG_PORT,
