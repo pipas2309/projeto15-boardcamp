@@ -75,6 +75,7 @@ async function createRentals(req, res) {
 
 async function finishRentals(req, res) {
     const { id } = req.params;
+    let delayFee = 0;
 
     try {
         const rental = await connection.query(
@@ -82,7 +83,37 @@ async function finishRentals(req, res) {
             [id]
         );
 
-        res.sendStatus(201);
+        if(rental.rowCount === 0) {
+            res.sendStatus(404);
+            return;
+        }
+
+        //Já devolvido
+        if(rental.rows[0].returnDate !== null) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const rentGame = await connection.query(
+            'SELECT * FROM games WHERE id = $1',
+            [rental.rows[0].gameId]
+        );
+
+        const returnDate = dayjs().format('YYYY-MM-DD');
+
+        const late = dayjs().diff(rental.rows[0].rentDate, 'day');
+
+        if(late > rental.rows[0].daysRented) {
+            delayFee = late * rentGame.rows[0].pricePerDay
+        }
+
+        //atualizando a locação no DB
+        await connection.query(
+            'UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3',
+            [returnDate, delayFee, id]
+        );
+
+        res.sendStatus(200);
         return;
 
     } catch (error) {
