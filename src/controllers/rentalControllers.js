@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import connection from "../db/postgresStrategy.js";
 
 async function getRentals(req, res) {
@@ -33,20 +34,36 @@ async function getRentals(req, res) {
 }
 
 async function createRentals(req, res) {
-    const { id } = req.params;
+    const { gameId, customerId, daysRented  } = req.locals.newRental;
 
     try {
-        const { rows: response } = await connection.query(
-            'SELECT * FROM customers WHERE id = $1',
-            [id]
+        //Procurando todos os jogos alugados desse ID
+        const { rows: rentals } = await connection.query(
+            'SELECT * FROM rentals WHERE "gameId" = $1 AND "returnDate" IS NULL',
+            [gameId]
         );
 
-        if(!response[0]) {
-            res.sendStatus(404);
+        //Procurando todos os jogos desse ID
+        const checkGame = await connection.query(
+            'SELECT * FROM games WHERE id = $1', [newRental.gameId]
+        );
+
+        //Comparando para ver se existe disponível
+        if (rentals.rowCount === checkGame.rows[0].stockTotal) {
+            res.sendStatus(400);
             return;
         }
 
-        res.status(200).send(response);
+        const returnDate = null, delayFee = null;
+        const rentDate = dayjs().format('YYYY-MM-DD');
+        const originalPrice = checkGame.rows[0].pricePerDay * daysRented;
+
+        const { rows: response } = await connection.query(
+            'INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee]
+        );
+
+        res.sendStatus(201);
         return;
 
     } catch (error) {
