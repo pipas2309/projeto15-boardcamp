@@ -88,7 +88,7 @@ async function finishRentals(req, res) {
             return;
         }
 
-        //Já devolvido
+        //Verifica se o jogo alugado já foi devolvido
         if(rental.rows[0].returnDate !== null) {
             res.sendStatus(400);
             return;
@@ -137,6 +137,7 @@ async function deleteRentals(req, res) {
             return;
         }
 
+        //Verifica se o jogo ainda não foi devolvido
         if(checkRentalId.rows[0].returnDate === null) {
             res.sendStatus(400);
             return;
